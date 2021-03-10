@@ -123,6 +123,9 @@ model.add(Flatten())
 
 # Outras camadas pode ser intercaladas com essas, porém é necessário verificar se o tamanho das saídas são compatíveis
 # Importante: A última camada de definirá o tamanho de saída. Nesse caso, o tamanho será 10.
+# Dica: Não use muitas camadas, isso pode acarretar em demora no treinamento. O gradinte é calculado pela composta
+# sucessiva, desde a camada de saída até a camada de entrada(Propagação para trás). Assim, o valor da deriva tende
+# progressivamente a zero, log
 model.add(Dense(50))
 model.add(Dense(20))
 model.add(Dense(80))
@@ -139,12 +142,12 @@ model.summary()
 # Momentum é uma forma de acelerar o treinamento.
 # Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
 
-opt = SGD(lr=0.001, momentum=0.9)
+opt = SGD(lr=0.01, momentum=0.9)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
 
 # Loss é o que o modelo deve procurar minimizar durante o treinamento.
-# Loss avalia se as probabilidades previstas são boas (ou ruins). No exemplo estou utilizado Entropia cruzada(Sigmoid)
+# Loss avalia se as probabilidades previstas são boas (ou ruins). No exemplo estou utilizado Entropia cruzada
 # https://medium.com/ensina-ai/uma-explica%C3%A7%C3%A3o-visual-para-fun%C3%A7%C3%A3o-de-custo-binary-cross-entropy-ou-log-loss-eaee662c396c
 
 # Metrics é utilizado para avaliar seu modelo.
@@ -164,7 +167,7 @@ model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy
 # Épocas = Número de ciclos de treinamento
 # x= Entradas dos dados: (Imagem Cat (32x32x3))
 # y= Saída desejada: ([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]) <- Código equivalente ao gato.
-resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=1)
+resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=100)
 
 # Predição dos resultados: Adicionei uma lista de entradas para teste que havia reservado
 resultado_predito = model.predict(testX)
