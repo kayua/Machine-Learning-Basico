@@ -126,7 +126,7 @@ model.add(Flatten())
 model.add(Dense(50, activation='relu'))
 model.add(Dense(20, activation='softmax'))
 model.add(Dense(80, activation='softmax'))
-model.add(Dense(10, activation='softmax'))
+model.add(Dense(10, activation='sigmoid'))
 
 # Summary serve para mostras a rede neural detalhadamente. Opcional
 model.summary()
@@ -142,6 +142,20 @@ model.summary()
 opt = SGD(lr=0.001, momentum=0.9)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
+
+# Loss é o que o modelo deve procurar minimizar durante o treinamento.
+# Loss avalia se as probabilidades previstas são boas (ou ruins). No exemplo estou utilizado Entropia cruzada(Sigmoid)
+# https://medium.com/ensina-ai/uma-explica%C3%A7%C3%A3o-visual-para-fun%C3%A7%C3%A3o-de-custo-binary-cross-entropy-ou-log-loss-eaee662c396c
+
+# Metrics é utilizado para avaliar seu modelo.
+
+#Accuracy metrics: Accuracy, BinaryAccuracy, CategoricalAccuracy, TopKCategoricalAccuracy, SparseTopKCategoricalAccuracy
+
+#Probabilistic metrics: BinaryCrossentropy, CategoricalCrossentropy, SparseCategoricalCrossentropy, Poisson
+
+#Regression metrics: MeanSquaredError, RootMeanSquaredError, MeanAbsoluteError, MeanAbsolutePercentageError
+
+# compile(<optimizer>, <loss>, <metrics>)
 
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
