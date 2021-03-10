@@ -122,15 +122,24 @@ model.add(Flatten())
 
 # Outras camadas pode ser intercaladas com essas, porém é necessário verificar se o tamanho das saídas são compatíveis
 # Importante: A última camada de definirá o tamanho de saída. Nesse caso, o tamanho será 10.
-model.add(Dense(20, activation='relu'))
+model.add(Dense(50, activation='relu'))
 model.add(Dense(20, activation='softmax'))
-model.add(Dense(20, activation='softmax'))
+model.add(Dense(50, activation='softmax'))
 model.add(Dense(10, activation='softmax'))
 
-
-
+# Summary serve para mostras a rede neural detalhadamente. Opcional
 model.summary()
+
+# Definição do otimizador. Nesse caso, foi escolhido o SGD (Gradiente descendente) usado pelo Multilayer Perceptron
+
+# Optimizer do keras:  [SGD, RMSprop, Adam, Adadelta, Adagrad, Adamax, Nadam, Ftrl]
+# lr = Taxa de aprendizado. É um valor que multiplica o valor de ajuste do peso.
+# Valores altos de lr podem dificultar o treinamento, valores muito baixos tornam a aprendizagem demorada.
+# Momentum é uma forma de acelerar o treinamento.
+# Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
+
 opt = SGD(lr=0.001, momentum=0.9)
+
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
 history = model.fit(trainX, trainY, epochs=10, batch_size=64, validation_data=(testX, testY))
