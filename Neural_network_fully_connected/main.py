@@ -123,10 +123,10 @@ model.add(Flatten())
 
 # Outras camadas pode ser intercaladas com essas, porém é necessário verificar se o tamanho das saídas são compatíveis
 # Importante: A última camada de definirá o tamanho de saída. Nesse caso, o tamanho será 10.
-model.add(Dense(50, activation='relu'))
-model.add(Dense(20, activation='softmax'))
-model.add(Dense(80, activation='softmax'))
-model.add(Dense(10, activation='sigmoid'))
+model.add(Dense(50))
+model.add(Dense(20))
+model.add(Dense(80))
+model.add(Dense(10, activation='softmax'))
 
 # Summary serve para mostras a rede neural detalhadamente. Opcional
 model.summary()
@@ -149,11 +149,11 @@ opt = SGD(lr=0.001, momentum=0.9)
 
 # Metrics é utilizado para avaliar seu modelo.
 
-#Accuracy metrics: Accuracy, BinaryAccuracy, CategoricalAccuracy, TopKCategoricalAccuracy, SparseTopKCategoricalAccuracy
+#Accuracy metrics: accuracy, binary_accuracy, categorical_accuracy, top_K_categorical_accuracy, etc..
 
-#Probabilistic metrics: BinaryCrossentropy, CategoricalCrossentropy, SparseCategoricalCrossentropy, Poisson
+#Probabilistic metrics: binary_crossentropy, categorical_crossentropy, sparse_categorical_crossentropy, poisson
 
-#Regression metrics: MeanSquaredError, RootMeanSquaredError, MeanAbsoluteError, MeanAbsolutePercentageError
+#Regression metrics: mean_squared_error, root_mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
 
 # compile(<optimizer>, <loss>, <metrics>)
 
@@ -162,7 +162,13 @@ model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy
 # treinar o modelo: Para treinar
 # fit(<Entradas X>,<Saida Y>,<Numero Épocas>, <Outros argumentos. Ex. Verbose, batch_size, etc...> )
 # Épocas = Número de ciclos de treinamento
-# x= Entradas dos dados(Exemplos de entrada)
-resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=10)
+# x= Entradas dos dados: (Imagem Cat (32x32x3))
+# y= Saída desejada: ([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]) <- Código equivalente ao gato.
+resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=1)
 
-visualizar_resultados(resultados_treinamento)
+# Predição dos resultados: Adicionei uma lista de entradas para teste que havia reservado
+resultado_predito = model.predict(testX)
+
+print("Imagem rótulo original: ", testY[10], "\nRótulo predito pela rede: ", resultado_predito[10])
+
+visualizar_resultados(resultados_treinamento)# Função para visualizar o erro diminuindo da rede
