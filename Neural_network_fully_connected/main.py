@@ -159,6 +159,10 @@ opt = SGD(lr=0.001, momentum=0.9)
 
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(trainX, trainY, epochs=10, batch_size=64, validation_data=(testX, testY))
+# treinar o modelo: Para treinar
+# fit(<Entradas X>,<Saida Y>,<Numero Épocas>, <Outros argumentos. Ex. Verbose, batch_size, etc...> )
+# Épocas = Número de ciclos de treinamento
+# x= Entradas dos dados(Exemplos de entrada)
+resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=10)
 
-visualizar_resultados(history)
+visualizar_resultados(resultados_treinamento)
