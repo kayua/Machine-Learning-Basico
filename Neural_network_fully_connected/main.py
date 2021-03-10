@@ -119,12 +119,13 @@ model.add(Flatten())
 # Dense(<NUMERO DE NEURÔNIO>, activation=<NOME DA FUNÇÂO DE ATIVAÇÃO>, +Argumentos) # O argumento activation é opcional
 
 # Activations do keras: [relu - softmax - LeakyReLU - prelu - elu - thresholdedrelu]
+# Activations: https://keras.io/api/layers/activation_layers/
 
 # Outras camadas pode ser intercaladas com essas, porém é necessário verificar se o tamanho das saídas são compatíveis
 # Importante: A última camada de definirá o tamanho de saída. Nesse caso, o tamanho será 10.
 model.add(Dense(50, activation='relu'))
 model.add(Dense(20, activation='softmax'))
-model.add(Dense(50, activation='softmax'))
+model.add(Dense(80, activation='softmax'))
 model.add(Dense(10, activation='softmax'))
 
 # Summary serve para mostras a rede neural detalhadamente. Opcional
@@ -139,6 +140,8 @@ model.summary()
 # Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
 
 opt = SGD(lr=0.001, momentum=0.9)
+
+# O modelo precisa ser compilado, para isso chamamos compile()
 
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
