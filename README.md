@@ -5,11 +5,11 @@ Exemplo aplicação de aprendizado de máquinas a diversos problemas.
 ## How the system works?
 The software consists of three recurrent convolutive neural networks, each of which plays a specific role in the classification of insects.
 
-`1 - Neural network that identifies insect noises.(ultra light)`
+`1 - Redes neurais - Gerais`
 
-`2 - Neural network for removing ambient noise.`
+`2 - Redes neurais - Pré-treinadas`
 
-`3 - Neural network for species classification.`
+`3 - Clusters - Básico-Avançado`
 
 
 ## Commands:
