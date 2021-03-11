@@ -2,7 +2,7 @@
 # Biblioteca para leitura de CSV
 from pandas import read_csv
 
-# Carregamento dos dados da tabela
+# Importando dependências do keras
 from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift
 from sklearn.cluster import DBSCAN
@@ -27,6 +27,8 @@ rotulos = rotulos[0:len(rotulos), :]
 
 # Aqui estão alguns algoritmos de clustering mais conhecidos
 # Para utilizar um deles basta remover o comentário do algoritmo desejado e comentar os demais
+# https://scikit-learn.org/stable/modules/clustering.html#clustering
+
 resultados = KMeans(n_clusters=3, random_state=10).fit_predict(dados_para_predicao)
 #resultados = MeanShift(0.8).fit_predict(dados_para_predicao)
 #resultados = AgglomerativeClustering(n_clusters=3, affinity='euclidean').fit_predict(dados_para_predicao)
