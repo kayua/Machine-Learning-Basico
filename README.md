@@ -12,38 +12,15 @@ The software consists of three recurrent convolutive neural networks, each of wh
 `3 - Clusters - Básico-Avançado`
 
 
-## Commands:
+## Implementações:
 
-    Optional Parameters
+    Aplicação
     
-        --bands       |   Define output bands of mel scale.
-        --frames      |   Define number of frames.
-        --class       |   Define number of mosquito class.
-        --epochs      |   Define number of training epochs.
-        --steps       |   Define number of steps per epochs.
-        --jumps       |   Define size jumps.
-        --fft         |   Define dimension of transform fourie.
-        --rate        |   Define the sample rate.
-        --gain        |   Define audio gain.
-        --logarithms  |   Define the logarithm scale.
-        --splits      |   Define number splits.
-        --dataset     |   Define dataset input directory.
-        --samples     |   Define pre-processed samples input directory.
-        --save        |   Define directory save models.
-    
-    Required Parameters
-        
-        Training         | This command allow training your model.
-        Predict          | This command is reserved for developers.
-        Help             | This command show this message.
-    
-    Tools Parameters
-    
-        GetPreprocessing | This command allow create dataset training pre-processed.
-        GetSamples       | This command allow create samples to training and tests.   
-        Evaluation       | This command allow evaluation your model.
-        Scales           | This command allow visualizing sound scales with your dataset.
-     
+        1       |  Rede neural perceptron para classificação de imagens Cifar100.
+        2       |  Rede neural convolutiva para classificação de imagem Cifar100.
+        3       |  Rede neural predição de series usando rede recorrentes
+        4       |  Define number of training epochs.
+        5       |  Clusters do básico ao avançado.
 
 ## Requirements:
 
