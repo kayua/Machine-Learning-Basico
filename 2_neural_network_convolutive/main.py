@@ -1,6 +1,6 @@
 # Importando bibliotecas necessárias
 
-# Visualisar imagens.
+# Visualisar imagens
 from matplotlib import pyplot
 
 # Dataset das figuras.
@@ -20,7 +20,7 @@ from keras.layers import Conv2D
 # Pooling máximo reduz o tamanho de sua entrada(Bidimensional) [[3,4],[5,1]] (MaxPooling2D(2,2)) -> [5]
 from keras.layers import MaxPooling2D
 
-# Dense é a rede "tradicional", neurônios simples.
+# Dense é a rede "tradicional", neurônios simples
 from keras.layers import Dense
 
 # Usado para achatar saídas ou entradas em rede neurais 2D->1D [[1.4, 1.1], [1.8, 3.1]] -> [1.4, 1.1, 1.8, 3.1]

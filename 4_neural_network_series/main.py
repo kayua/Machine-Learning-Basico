@@ -1,8 +1,20 @@
+# Importando bibliotecas necessárias
+
+
+# Biblioteca numérica
 import numpy
+
+# Visualisar imagens
 import matplotlib.pyplot as plt
+
+# Biblioteca para leitura de CSV
 from pandas import read_csv
 
+# Importação de camadas do Keras
+
 from keras.models import Sequential
+
+# Dense é a rede "tradicional", neurônios simples
 from keras.layers import Dense
 from keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler

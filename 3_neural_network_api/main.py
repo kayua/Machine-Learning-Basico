@@ -7,6 +7,7 @@ import glob
 import numpy
 
 # Biblioteca de aprendizado de máquinas sklearn import do KMeans
+# https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html#sphx-glr-auto-examples-cluster-plot-cluster-comparison-py
 from sklearn.cluster import KMeans
 
 # Importando Application ResNet152V2, VGG16, InceptionV3, DenseNet201
