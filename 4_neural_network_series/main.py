@@ -114,21 +114,23 @@ model.add(Dense(1))
 # metrica utilizei o erro absoluto médio
 model.compile(loss='mean_squared_error', optimizer='adam', metrics="mean_absolute_error")
 
-resultados = model.fit(conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede, epochs=20, batch_size=1)
+resultados = model.fit(conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede, epochs=2800, batch_size=1)
 
+# Predição da rede neural
 resultados_preditos_treinamento = model.predict(conjunto_de_trainamento_entrada_rede)
 resultados_predictos_testes = model.predict(conjunto_de_testes_entrada_rede)
 
-trainPredictPlot = numpy.empty_like(conjunto_de_dados)
-trainPredictPlot[:, :] = numpy.nan
-trainPredictPlot[1:len(resultados_preditos_treinamento) + 1, :] = resultados_preditos_treinamento
 
-testPredictPlot = numpy.empty_like(conjunto_de_dados)
-testPredictPlot[:, :] = numpy.nan
-testPredictPlot[len(resultados_preditos_treinamento) + 2 + 1:len(conjunto_de_dados) - 1, :] = resultados_predictos_testes
+resultados_formatados_plot_treinamento = numpy.empty_like(conjunto_de_dados)
+resultados_formatados_plot_treinamento[:, :] = numpy.nan
+resultados_formatados_plot_treinamento[1:len(resultados_preditos_treinamento) + 1, :] = resultados_preditos_treinamento
+
+resultados_formatados_plot_predicoes = numpy.empty_like(conjunto_de_dados)
+resultados_formatados_plot_predicoes[:, :] = numpy.nan
+resultados_formatados_plot_predicoes[len(resultados_preditos_treinamento) + 2 + 1:len(conjunto_de_dados) - 1, :] = resultados_predictos_testes
 
 pyplot.plot(conjunto_de_dados)
-pyplot.plot(testPredictPlot)
+pyplot.plot(resultados_formatados_plot_predicoes)
 pyplot.show()
 
 visualizar_resultados(resultados)
