@@ -21,39 +21,51 @@ from tensorflow.keras.applications.densenet import DenseNet201
 from tensorflow.keras.preprocessing import image
 # Importando preprocessador para adptar imagens a entrada da rede
 # Para cada uma das redes, use apenas o preprocess_input específico o restante deixe como comentário
-#from tensorflow.keras.applications.resnet_v2 import preprocess_input
-from tensorflow.keras.applications.vgg16 import preprocess_input
+from tensorflow.keras.applications.resnet_v2 import preprocess_input
+#from tensorflow.keras.applications.vgg16 import preprocess_input
 #from tensorflow.keras.applications.inception_v3 import preprocess_input
 #from tensorflow.keras.applications.densenet import preprocess_input
 
 
 # Aqui estou carregando o modelo de rede neural desejada.
 # Utilize apenas a rede desejada o restante deixe como comentário
-#model = ResNet152V2(weights='imagenet', include_top=False)
-model = VGG16(weights='imagenet', include_top=False)
+# Imagenet é uma base de dados com muitas imagens, algumas das quais foram usadas para pre-treinar esse modelo
+# O include_top é uma espécie de camada extra no topo da rede. Não recomendado. Evite problemas com os modelos
+model = ResNet152V2(weights='imagenet', include_top=False)
+#model = VGG16(weights='imagenet', include_top=False)
 #model = InceptionV3(weights='imagenet', include_top=False)
 #model = DenseNet201(weights='imagenet', include_top=False)
 
+# Summary serve para mostras a rede neural detalhadamente. Opcional
 model.summary()
-list_features_extracted = []
+# Lista que armazenará as features extraidas
+lista_de_features_extraidas = []
 
-file_list = glob.glob("images/*.jpg")
-file_list = sorted(file_list)
+# Aqui estou listando e ordenando as imagens do diretório images/
+lista_nome_arquivos = glob.glob("images/*.jpg")
+lista_nome_arquivos = sorted(lista_nome_arquivos)
 
-for num, file in enumerate(file_list):
+# Esse laço serve para extrair features de todas imagens
+for indice, diretorio_image in enumerate(lista_nome_arquivos):
 
-    if num % 5 == 0:
+    if indice % 5 == 0:
         print('Class: ')
 
-    print(' - ', file)
+    print(' - ', diretorio_image)
 
-    img = image.load_img(file, target_size=(224, 224))
-    x = image.img_to_array(img)
-    x = numpy.expand_dims(x, axis=0)
-    x = preprocess_input(x)
-    features = numpy.array(model.predict(x), dtype='float16')
-    list_features_extracted.append(features.flatten())
+    # Abrindo a imagem usando uma ferramenta do tensorflow. Dá para usar outras ferramentas sem problema
+    imagem_aberta = image.load_img(diretorio_image, target_size=(224, 224))
 
-y_pred = KMeans(n_clusters=5, random_state=200).fit_predict(list_features_extracted)
+    # Transformando a imagem em um array
+    imagem_array = image.img_to_array(imagem_aberta)
+
+    # Aqui estou tranformando a imagem em um array numpy "expandido"(Útil quando houver lote de imagens)
+    imagem_array = numpy.expand_dims(imagem_array, axis=0)
+    # A
+    imagem_array = preprocess_input(imagem_array)
+    features = numpy.array(model.predict(imagem_array), dtype='float16')
+    lista_de_features_extraidas.append(features.flatten())
+
+y_pred = KMeans(n_clusters=5, random_state=200).fit_predict(lista_de_features_extraidas)
 
 print(y_pred)
