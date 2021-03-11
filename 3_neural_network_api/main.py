@@ -41,7 +41,7 @@ model.summary()
 # Lista que armazenará as features extraidas
 lista_de_features_extraidas = []
 
-# Aqui estou listando e ordenando as imagens do diretório images/
+# Aqui estou listando e ordenando as imagens do diretório tabela/
 lista_nome_arquivos = glob.glob("images/*.jpg")
 lista_nome_arquivos = sorted(lista_nome_arquivos)
 
