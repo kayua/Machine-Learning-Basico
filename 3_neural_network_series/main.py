@@ -20,7 +20,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Input
 
 # Recurrent é a classe mais simples de redes neurais recorrentes.
-from keras.layers import recurrent
+from keras.layers import SimpleRNN
 
 # LSTM é uma classe de redes neurais recorrentes mais avençadas que as RNN comuns
 from keras.layers import LSTM
@@ -100,9 +100,16 @@ inicializador = initializers.RandomNormal(stddev=0.01)
 model.add(Input(shape=(1, 1)))
 
 # LSTM(<Número de células>, <Kernel de inicialização>(Opcional))
+
 model.add(LSTM(18, kernel_initializer=inicializador))
 
+# Rede neural recorrente simples. Possui a mesma assinatura da LSTM.
+# Caso queira usar esse modelo basta comentar a LSTM e remover o comentário da SimpleRNN
+
+#model.add(SimpleRNN(18, kernel_initializer=inicializador))
+
 # Dense é a rede "tradicional", neurônios simples.
+# Necessária para classificar a saída.
 model.add(Dense(16))
 model.add(Dense(1))
 
