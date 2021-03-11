@@ -12,22 +12,11 @@ from keras.utils import to_categorical
 # Classe modelo para as rede neurais(Pode ser feito na mão caso achem melhor)
 from keras.models import Sequential
 
-# Camadas para rede neural
-
-# Convolução bidimensional
-from keras.layers import Conv2D
-
-# Pooling máximo reduz o tamanho de sua entrada(Bidimensional) [[3,4],[5,1]] (MaxPooling2D(2,2)) -> [5]
-from keras.layers import MaxPooling2D
-
 # Dense é a rede "tradicional", neurônios simples.
 from keras.layers import Dense
 
 # Usado para achatar saídas ou entradas em rede neurais 2D->1D [[1.4, 1.1], [1.8, 3.1]] -> [1.4, 1.1, 1.8, 3.1]
 from keras.layers import Flatten
-
-# Função de "atualização" dos pesos na rede neural("Perda"), é necessária para o treinamento
-from keras.optimizers import SGD
 
 
 # Obtendo dataset para treinamento - Aqui estou usando um dataset presete na biblioteca
@@ -50,6 +39,7 @@ from keras.optimizers import SGD
 
 # Função simples para pegar os dados do dataset
 from tensorflow.python.keras import Input
+from tensorflow.python.keras.optimizers import adam
 
 
 def carregar_dataset():
@@ -108,17 +98,6 @@ model = Sequential()
 # Define o tamanho dos dados de entrada. Ex (Imagens 32x32 com 3 cores)
 model.add(Input(shape=(32, 32, 3)))
 
-# Típica rede neural convolutiva
-
-# Camada convolutiva com 32 filtros com tamanho (3x3)
-model.add(Conv2D(32, (3, 3)))
-# Camada de pooling que reduz o tamanho da imagem de Ex. 32x32 para 16x16. Tamanho do pooling divide a imagem 32/2 = 16
-model.add(MaxPooling2D((2, 2)))
-
-model.add(Conv2D(32, (3, 3)))
-model.add(MaxPooling2D((2, 2)))
-model.add(Conv2D(32, (3, 3)))
-
 # Transforma o formato de entrada(32, 32, 3) em um vetor continuo(3072).
 # Essa camada é necessária sempre que houver uma entrada com mais de uma dimensão entrando em uma camada densa
 model.add(Flatten())
@@ -135,12 +114,15 @@ model.add(Flatten())
 # sucessiva, desde a camada de saída até a camada de entrada(Propagação para trás). Assim, o valor da deriva tende
 # progressivamente a zero, log
 
+model.add(Dense(50))
+model.add(Dense(20))
+model.add(Dense(80))
 model.add(Dense(10, activation='softmax'))
 
 # Summary serve para mostras a rede neural detalhadamente. Opcional
 model.summary()
 
-# Definição do otimizador. Nesse caso, foi escolhido o SGD (Gradiente descendente) usado pelo Multilayer Perceptron
+# Definição do otimizador. Nesse caso, foi escolhido o Adam (Gradiente estocástico) usado pelo Multilayer Perceptron
 
 # Optimizer do keras:  [SGD, RMSprop, Adam, Adadelta, Adagrad, Adamax, Nadam, Ftrl]
 # lr = Taxa de aprendizado. É um valor que multiplica o valor de ajuste do peso.
@@ -148,7 +130,7 @@ model.summary()
 # Momentum é uma forma de acelerar o treinamento.
 # Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
 
-opt = SGD(lr=0.01, momentum=0.9)
+opt = adam(lr=0.01, momentum=0.9)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
 
