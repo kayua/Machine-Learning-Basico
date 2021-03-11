@@ -19,7 +19,6 @@ from tensorflow.keras.applications.densenet import DenseNet201
 
 # Importando preprocessing para carregar entradas
 from tensorflow.keras.preprocessing import image
-
 # Importando preprocessador para adptar imagens a entrada da rede
 # Para cada uma das redes, use apenas o preprocess_input específico o restante deixe como comentário
 #from tensorflow.keras.applications.resnet_v2 import preprocess_input
