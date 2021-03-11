@@ -30,10 +30,7 @@ Esse repositório possui algumas implementações de algoritmos de aprendizado d
 `tensorflow 2.3.0`
 
 `h5py 2.10.0`
-`librosa 0.8.0`
 `scikit-learn 0.23.2`
 `matplotlib 3.2.2`
 `pandas`
-
-`SoundFile 0.10.3.post1`
 `scipy 1.4.1`
