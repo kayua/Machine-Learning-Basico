@@ -17,7 +17,7 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 
 # Dense é a rede "tradicional", neurônios simples
-from keras.layers import Dense
+from keras.layers import Dense, Input
 
 # Recurrent é a classe mais simples de redes neurais recorrentes.
 from keras.layers import recurrent
@@ -31,6 +31,7 @@ from tensorflow import initializers
 
 
 def create_dataset(dados_da_serie):
+
     # Lista de amostras
     entrada_rede_neural_X, saida_rede_neural_Y = [], []
 
@@ -53,9 +54,9 @@ def visualizar_resultados(modelo):
     pyplot.plot(modelo.history['loss'], color='blue')
 
     pyplot.subplot(212)
-    pyplot.title('Acurácia da classificação')
+    pyplot.title('Erro médio absoluto')
     # Plota os valores de acurácia da rede em cada época.
-    pyplot.plot(modelo.history['accuracy'], color='blue')
+    pyplot.plot(modelo.history['mean_absolute_error'], color='blue')
 
     pyplot.show('figura')
     pyplot.close()
@@ -76,38 +77,58 @@ dados_para_testes = conjunto_de_dados[tamanho_conjunto_treinamento:len(conjunto_
 
 # Criando o dataset trainamento e teste
 conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede = create_dataset(dados_para_treinamento)
-testX, testY = create_dataset(dados_para_testes)
+conjunto_de_testes_entrada_rede, conjunto_de_testes_saida_rede = create_dataset(dados_para_testes)
 
 # Convertendo lista de amostras para numpy array
 conjunto_de_trainamento_entrada_rede = numpy.array(conjunto_de_trainamento_entrada_rede)
 conjunto_treinamento_saida_rede = numpy.array(conjunto_treinamento_saida_rede)
-testX = numpy.array(testX)
-testY = numpy.array(testY)
+conjunto_de_testes_entrada_rede = numpy.array(conjunto_de_testes_entrada_rede)
+conjunto_de_testes_saida_rede = numpy.array(conjunto_de_testes_saida_rede)
 
-
+# Ajusta o formato a entrada da rede
 conjunto_de_trainamento_entrada_rede = numpy.reshape(conjunto_de_trainamento_entrada_rede, (conjunto_de_trainamento_entrada_rede.shape[0], 1, conjunto_de_trainamento_entrada_rede.shape[1]))
-testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
-# create and fit the LSTM network
+conjunto_de_testes_entrada_rede = numpy.reshape(conjunto_de_testes_entrada_rede, (conjunto_de_testes_entrada_rede.shape[0], 1, conjunto_de_testes_entrada_rede.shape[1]))
+
+# Instância a rede neural
 model = Sequential()
+
+# Inicializa os pesos usando distribuição normal com desvio stddev de 0.01
+# Fiz isso, pois a rede estava demorando muito para treinar. LSTM normalmente demora
 inicializador = initializers.RandomNormal(stddev=0.01)
-model.add(LSTM(18, input_shape=(1, 1), kernel_initializer=inicializador))
+
+# Definindo formato de entrada da rede
+model.add(Input(shape=(1, 1)))
+
+# LSTM(<Número de células>, <Kernel de inicialização>(Opcional))
+model.add(LSTM(18, kernel_initializer=inicializador))
+
+# Dense é a rede "tradicional", neurônios simples.
 model.add(Dense(16))
 model.add(Dense(1))
-model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede, epochs=2600, batch_size=1)
-# make predictions
-trainPredict = model.predict(conjunto_de_trainamento_entrada_rede)
-testPredict = model.predict(testX)
-# invert predictions
-# calculate root mean squared error
+
+# Compilando a rede neural, aqui utilizei Erro médio quadrático pois meu objetivo é minimizar a diferença entre
+# os resultado preditos e o resultado original
+# O otimizador, utilizei o gradiente estocástico. Entre os otimizadores é o que acho mais tranquilo de usar.
+# Não lembro de ter tido problemas com ótimos locais usando esse método de aproximação
+# https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/
+# metrica utilizei o erro absoluto médio
+model.compile(loss='mean_squared_error', optimizer='adam', metrics="mean_absolute_error")
+
+resultados = model.fit(conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede, epochs=20, batch_size=1)
+
+resultados_preditos_treinamento = model.predict(conjunto_de_trainamento_entrada_rede)
+resultados_predictos_testes = model.predict(conjunto_de_testes_entrada_rede)
+
 trainPredictPlot = numpy.empty_like(conjunto_de_dados)
 trainPredictPlot[:, :] = numpy.nan
-trainPredictPlot[1:len(trainPredict) + 1, :] = trainPredict
-# shift test predictions for plotting
+trainPredictPlot[1:len(resultados_preditos_treinamento) + 1, :] = resultados_preditos_treinamento
+
 testPredictPlot = numpy.empty_like(conjunto_de_dados)
 testPredictPlot[:, :] = numpy.nan
-testPredictPlot[len(trainPredict) + 2 + 1:len(conjunto_de_dados) - 1, :] = testPredict
-# plot baseline and predictions
+testPredictPlot[len(resultados_preditos_treinamento) + 2 + 1:len(conjunto_de_dados) - 1, :] = resultados_predictos_testes
+
 pyplot.plot(conjunto_de_dados)
 pyplot.plot(testPredictPlot)
 pyplot.show()
+
+visualizar_resultados(resultados)
