@@ -2,8 +2,8 @@
 
 Exemplo aplicação de aprendizado de máquinas a diversos problemas.
 
-## How the system works?
-The software consists of three recurrent convolutive neural networks, each of which plays a specific role in the classification of insects.
+## Redes neurais?
+Esse repositório possui algumas implementações de algoritmos de aprendizado de máquinas utilizando API conhecidas.
 
 `1 - Redes neurais - Gerais`
 
