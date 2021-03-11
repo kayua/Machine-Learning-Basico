@@ -3,7 +3,7 @@
 Exemplo aplicação de aprendizado de máquinas a diversos problemas.
 
 ## Redes neurais
-Esse repositório possui algumas implementações de algoritmos de aprendizado de máquinas utilizando API conhecidas.
+Esse repositório possui algumas implementações de algoritmos de aprendizado de máquinas utilizando APIs conhecidas.
 
 `1 - Redes neurais - Gerais`
 
