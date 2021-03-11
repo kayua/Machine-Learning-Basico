@@ -18,8 +18,8 @@ The software consists of three recurrent convolutive neural networks, each of wh
     
         1       |  Rede neural perceptron para classificação de imagens Cifar100.
         2       |  Rede neural convolutiva para classificação de imagem Cifar100.
-        3       |  Rede neural predição de series usando rede recorrentes
-        4       |  Define number of training epochs.
+        3       |  Redes neurais predição de series usando rede recorrentes
+        4       |  Redes neurais pré-treinadas e cluster, classificação de imagens.
         5       |  Clusters do básico ao avançado.
 
 ## Requirements:
