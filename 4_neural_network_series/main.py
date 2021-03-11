@@ -5,71 +5,109 @@
 import numpy
 
 # Visualisar imagens
-import matplotlib.pyplot as plt
+from matplotlib import pyplot
 
 # Biblioteca para leitura de CSV
 from pandas import read_csv
 
+# Uma das inúmeras funções do SKlear úteis para limpar o dataset
+from sklearn.preprocessing import MinMaxScaler
 # Importação de camadas do Keras
 
 from keras.models import Sequential
 
 # Dense é a rede "tradicional", neurônios simples
 from keras.layers import Dense
-from keras.layers import LSTM
-from sklearn.preprocessing import MinMaxScaler
 
-def create_dataset(dataset, look_back=1):
-	dataX, dataY = [], []
-	for i in range(len(dataset)-look_back-1):
-		a = dataset[i:(i+look_back), 0]
-		dataX.append(a)
-		dataY.append(dataset[i + look_back, 0])
-	return numpy.array(dataX), numpy.array(dataY)
-# fix random seed for reproducibility
-numpy.random.seed(7)
-# load the dataset
-dataframe = read_csv('tabela/tabela.csv', usecols=[1], engine='python')
-dataset = dataframe.values
-dataset = dataset.astype('float32')
-# normalize the dataset
-scaler = MinMaxScaler(feature_range=(0, 1))
-dataset = scaler.fit_transform(dataset)
-# split into train and test sets
-train_size = int(len(dataset) * 0.67)
-test_size = len(dataset) - train_size
-train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
-# reshape into X=t and Y=t+1
-look_back = 1
-trainX, trainY = create_dataset(train, look_back)
-testX, testY = create_dataset(test, look_back)
-# reshape input to be [samples, time steps, features]
-trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+# Recurrent é a classe mais simples de redes neurais recorrentes.
+from keras.layers import recurrent
+
+# LSTM é uma classe de redes neurais recorrentes mais avençadas que as RNN comuns
+from keras.layers import LSTM
+
+
+# Função usada para gerar o conjunto de dados da serie
+from tensorflow import initializers
+
+
+def create_dataset(dados_da_serie):
+    # Lista de amostras
+    entrada_rede_neural_X, saida_rede_neural_Y = [], []
+
+    # Para cada ponto dos dados no tempo, adiciono a lista o valor no ponto (Tanto para X quanto para Y)
+    # Isso ocorre porque a partir do ponto anterior eu devo predizer exatamente o valor posterior.
+    for i in range(len(dados_da_serie) - 2):
+
+        dado_em_um_determinado_ponto = dados_da_serie[(i + 1), 0]
+        entrada_rede_neural_X.append([dado_em_um_determinado_ponto])
+        saida_rede_neural_Y.append(dado_em_um_determinado_ponto)
+
+    return entrada_rede_neural_X, saida_rede_neural_Y
+
+def visualizar_resultados(modelo):
+
+    pyplot.subplot(211)
+    pyplot.title('Perda da rede(treinamento)')
+
+    # Plota os valores de perda da rede em cada época.
+    pyplot.plot(modelo.history['loss'], color='blue')
+
+    pyplot.subplot(212)
+    pyplot.title('Acurácia da classificação')
+    # Plota os valores de acurácia da rede em cada época.
+    pyplot.plot(modelo.history['accuracy'], color='blue')
+
+    pyplot.show('figura')
+    pyplot.close()
+
+# Carregamento dos dados da tabela
+dados_tabela = read_csv('tabela/tabela.csv', usecols=[1], engine='python')
+conjunto_de_dados = dados_tabela.values
+
+# Conversão para float32
+conjunto_de_dados = conjunto_de_dados.astype('float32')
+
+
+# Separação os dados em dois conjuntos, teste(40%) e trainamento(60%)
+tamanho_conjunto_treinamento = int(len(conjunto_de_dados) * 0.60)
+tamanho_conjunto_testes = len(conjunto_de_dados) - tamanho_conjunto_treinamento
+dados_para_treinamento = conjunto_de_dados[0:tamanho_conjunto_treinamento, :]
+dados_para_testes = conjunto_de_dados[tamanho_conjunto_treinamento:len(conjunto_de_dados), :]
+
+# Criando o dataset trainamento e teste
+conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede = create_dataset(dados_para_treinamento)
+testX, testY = create_dataset(dados_para_testes)
+
+# Convertendo lista de amostras para numpy array
+conjunto_de_trainamento_entrada_rede = numpy.array(conjunto_de_trainamento_entrada_rede)
+conjunto_treinamento_saida_rede = numpy.array(conjunto_treinamento_saida_rede)
+testX = numpy.array(testX)
+testY = numpy.array(testY)
+
+
+conjunto_de_trainamento_entrada_rede = numpy.reshape(conjunto_de_trainamento_entrada_rede, (conjunto_de_trainamento_entrada_rede.shape[0], 1, conjunto_de_trainamento_entrada_rede.shape[1]))
 testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
 # create and fit the LSTM network
 model = Sequential()
-model.add(LSTM(4, input_shape=(1, look_back)))
+inicializador = initializers.RandomNormal(stddev=0.01)
+model.add(LSTM(18, input_shape=(1, 1), kernel_initializer=inicializador))
+model.add(Dense(16))
 model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
+model.fit(conjunto_de_trainamento_entrada_rede, conjunto_treinamento_saida_rede, epochs=2600, batch_size=1)
 # make predictions
-trainPredict = model.predict(trainX)
+trainPredict = model.predict(conjunto_de_trainamento_entrada_rede)
 testPredict = model.predict(testX)
 # invert predictions
-trainPredict = scaler.inverse_transform(trainPredict)
-trainY = scaler.inverse_transform([trainY])
-testPredict = scaler.inverse_transform(testPredict)
-testY = scaler.inverse_transform([testY])
 # calculate root mean squared error
-trainPredictPlot = numpy.empty_like(dataset)
+trainPredictPlot = numpy.empty_like(conjunto_de_dados)
 trainPredictPlot[:, :] = numpy.nan
-trainPredictPlot[look_back:len(trainPredict)+look_back, :] = trainPredict
+trainPredictPlot[1:len(trainPredict) + 1, :] = trainPredict
 # shift test predictions for plotting
-testPredictPlot = numpy.empty_like(dataset)
+testPredictPlot = numpy.empty_like(conjunto_de_dados)
 testPredictPlot[:, :] = numpy.nan
-testPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = testPredict
+testPredictPlot[len(trainPredict) + 2 + 1:len(conjunto_de_dados) - 1, :] = testPredict
 # plot baseline and predictions
-plt.plot(scaler.inverse_transform(dataset))
-plt.plot(trainPredictPlot)
-plt.plot(testPredictPlot)
-plt.show()
+pyplot.plot(conjunto_de_dados)
+pyplot.plot(testPredictPlot)
+pyplot.show()

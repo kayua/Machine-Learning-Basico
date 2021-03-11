@@ -182,3 +182,6 @@ resultado_predito = model.predict(testX)
 print("Imagem rótulo original: ", testY[10], "\nRótulo predito pela rede: ", resultado_predito[10])
 
 visualizar_resultados(resultados_treinamento)# Função para visualizar o erro diminuindo da rede
+
+# Caso queiram salvar o seus modelos de rede neural:
+#https://machinelearningmastery.com/save-load-keras-deep-learning-models/

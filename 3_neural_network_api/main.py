@@ -1,4 +1,5 @@
 # Importando bibliotecas necessárias
+# Descomprima o dataset para uma pasta chamada images
 
 # Biblioteca para listagem de arquivos
 import glob

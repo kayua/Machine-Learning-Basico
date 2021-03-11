@@ -155,7 +155,7 @@ model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy
 # Épocas = Número de ciclos de treinamento
 # x= Entradas dos dados: (Imagem Cat (32x32x3))
 # y= Saída desejada: ([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]) <- Código equivalente ao gato.
-resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=100)
+resultados_treinamento = model.fit(x=trainX, y=trainY, epochs=200)
 
 # Predição dos resultados: Adicionei uma lista de entradas para teste que havia reservado
 resultado_predito = model.predict(testX)
