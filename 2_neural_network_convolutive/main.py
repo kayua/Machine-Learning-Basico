@@ -112,6 +112,7 @@ model.add(Input(shape=(32, 32, 3)))
 
 # Camada convolutiva com 32 filtros com tamanho (3x3)
 model.add(Conv2D(32, (3, 3)))
+
 # Camada de pooling que reduz o tamanho da imagem de Ex. 32x32 para 16x16. Tamanho do pooling divide a imagem 32/2 = 16
 model.add(MaxPooling2D((2, 2)))
 
