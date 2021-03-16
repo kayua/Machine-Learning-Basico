@@ -227,7 +227,7 @@ while True:
     resultadas_perda_real_e_falsa_batch = numpy.add(obtencao_da_perda_do_modelo_imagens_reais, obtencao_de_perda_do_modelo_imagens_falsas) * 0.5
 
     # Treimento da GAN(Gerador é o que realmente será treinado)
-    g_loss = rede_GAN.train_on_batch(lista_ruidos_para_geracao_imagem, valor_1_para_o_gerador)
+    perda_saida_rede_gan = rede_GAN.train_on_batch(lista_ruidos_para_geracao_imagem, valor_1_para_o_gerador)
 
     if epoch % 100 == 0:
 
@@ -236,7 +236,7 @@ while True:
         confidence = modelo_discriminador.predict(pred)
         gen_img = (0.5 * pred[0] + 0.5) * 255
 
-        print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, resultadas_perda_real_e_falsa_batch[0], 100 * resultadas_perda_real_e_falsa_batch[1], g_loss / 10))
+        print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, resultadas_perda_real_e_falsa_batch[0], 100 * resultadas_perda_real_e_falsa_batch[1], perda_saida_rede_gan / 10))
         cv2.imwrite('drive/MyDrive/imagens/image_saida' + str(epoch) + '.png', gen_img)
 
     epoch += 1
