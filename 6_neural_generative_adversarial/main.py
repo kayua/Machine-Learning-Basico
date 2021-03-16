@@ -57,6 +57,7 @@ import tensorflow as tf
 # Função responsável por criar o gerador imagens,
 # que a partir do ruído aleatório(pontos de latência) irá criar a imagem fake
 def funcao_criar_gerador_image():
+
     # Instância do model
     model = Sequential()
 
@@ -157,12 +158,6 @@ modelo_gerador = funcao_criar_gerador_image()
 
 # Definição do otimizador. Nesse caso, foi escolhido o Adam (Gradiente estocástico) usado pelo Multilayer Perceptron
 # Optimizer do keras:  [SGD, RMSprop, Adam, Adadelta, Adagrad, Adamax, Nadam, Ftrl]
-# lr = Taxa de aprendizado. É um valor que multiplica o valor de ajuste do peso.
-# Valores altos de lr podem dificultar o treinamento, valores muito baixos tornam a aprendizagem demorada.
-# Momentum é uma forma de acelerar o treinamento.
-# Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
-opt = adam(lr=0.01)
-
 # O modelo precisa ser compilado, para isso chamamos compile()
 # Metrics é utilizado para avaliar seu modelo.
 #Accuracy metrics: accuracy, binary_accuracy, categorical_accuracy, top_K_categorical_accuracy, etc..
@@ -170,55 +165,78 @@ opt = adam(lr=0.01)
 #Regression metrics: mean_squared_error, root_mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
 # compile(<optimizer>, <loss>, <metrics>)
 
-modelo_discriminador.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
+modelo_discriminador.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Aqui estou especificando que o discriminador não deve ser treinado
 modelo_discriminador.trainable = False
 
-z = Input(shape=(200,))
-img = modelo_gerador(z)
-valid = modelo_discriminador(img)
+# Aqui estou instânciando a entrada do gerador
+entrada_para_gerador = Input(shape=(200,))
 
-rede_gan = Model(z, valid)
-rede_gan.compile(loss='binary_crossentropy', optimizer=optimizer)
+# Aqui estou coletando a saída e transferindo para o discriminador
+saida_resultante_gerador = modelo_gerador(entrada_para_gerador)
 
-dos = glob("drive/MyDrive/dataset/*")
+# Aqui o discriminador recebe a imagem gerada
+# O discriminador vai gerar uma saída de erro
+resultado_avaliacao_imagem = modelo_discriminador(saida_resultante_gerador)
 
-image_list = []
+# Esse é o modelo Gan montado, basicamente entra ruído, sai o resultado da avaliação da imagem
+rede_GAN = Model(entrada_para_gerador, resultado_avaliacao_imagem)
 
-for i in tqdm(dos):
-    image_list.append(converte_image_formato_tensorflow(i))
+# Aqui compilo a rede Gan
+rede_GAN.compile(loss='binary_crossentropy', optimizer='adam')
 
-X_train = numpy.asarray(image_list, dtype="int32")
+# Listagem das imagens
+lista_nome_imagens_dataset = glob("dataset/*")
+lista_de_imagens_carregadas = []
 
-ones = numpy.ones((30, 1))
+# Carregamento das imagens
+for i in tqdm(lista_nome_imagens_dataset):
+
+    lista_de_imagens_carregadas.append(converte_image_formato_tensorflow(i))
+
+# Convertendo lista de imagens para numpy array
+X_train = numpy.asarray(lista_de_imagens_carregadas, dtype="int32")
+
+# Criando a saida desejada para imagens reais
+valor_1_para_o_gerador = numpy.ones((30, 1))
+
+# Criando a saida desejada para imagem falsas
 zeros = numpy.zeros((30, 1))
 
 epoch = 0
-noise = numpy.random.normal(0, 1, (30, 200))
-idx = numpy.random.randint(0, X_train.shape[0], 30)
 
-while (1):
+while True:
 
-    epoch += 1
 
-    imgs = X_train[idx]
 
-    gen_imgs = modelo_gerador.predict(noise)
-    d_loss_r = modelo_discriminador.train_on_batch(imgs, ones)
-    d_loss_f = modelo_discriminador.train_on_batch(gen_imgs, zeros)
-    d_loss = numpy.add(d_loss_r, d_loss_f) * 0.5
+    # Criando ruído "com 200 pontos de latência"
+    lista_ruidos_para_geracao_imagem = numpy.random.normal(0, 1, (30, 200))
 
-    g_loss = rede_gan.train_on_batch(noise, ones)
+    # Escolha de lote aleatório de imagem
+    lote_de_indices_imagens = numpy.random.randint(0, X_train.shape[0], 30)
+    lote_imagens = X_train[lote_de_indices_imagens]
+
+    # Gerando imagem falsa
+    imagens_geradas = modelo_gerador.predict(lista_ruidos_para_geracao_imagem)
+
+    # Obtenção das perdas para imagem falsa e imagem real(Gambiarra para obter as perdas, o treinamento não é efetuado)
+    obtencao_da_perda_do_modelo_imagens_reais = modelo_discriminador.train_on_batch(lote_imagens, valor_1_para_o_gerador)
+    obtencao_de_perda_do_modelo_imagens_falsas = modelo_discriminador.train_on_batch(imagens_geradas, zeros)
+    
+    resultadas_perda_real_e_falsa_batch = numpy.add(obtencao_da_perda_do_modelo_imagens_reais, obtencao_de_perda_do_modelo_imagens_falsas) * 0.5
+
+    # Treimento da GAN(Gerador é o que realmente será treinado)
+    g_loss = rede_GAN.train_on_batch(lista_ruidos_para_geracao_imagem, valor_1_para_o_gerador)
 
     if epoch % 100 == 0:
+
         rand_noise = numpy.random.normal(0, 1, (1, 200))
         pred = modelo_gerador.predict(rand_noise)
         confidence = modelo_discriminador.predict(pred)
         gen_img = (0.5 * pred[0] + 0.5) * 255
 
-        print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, d_loss[0], 100 * d_loss[1], g_loss / 10))
+        print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, resultadas_perda_real_e_falsa_batch[0], 100 * resultadas_perda_real_e_falsa_batch[1], g_loss / 10))
         cv2.imwrite('drive/MyDrive/imagens/image_saida' + str(epoch) + '.png', gen_img)
 
-    if epoch == 1000000:
-        break
+    epoch += 1
