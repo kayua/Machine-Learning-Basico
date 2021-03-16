@@ -52,12 +52,10 @@ from tqdm import tqdm
 # Importando tensorflow
 import tensorflow as tf
 
-# Função responsável por gerar imagens a partir do ruído aleatório(pontos de latência)
-# Esse é o modelo é que vai gerar a image,
 
-
+# Função responsável por criar o gerador imagens,
+# que a partir do ruído aleatório(pontos de latência) irá criar a imagem fake
 def funcao_criar_gerador_image():
-
     # Instância do model
     model = Sequential()
 
@@ -71,10 +69,10 @@ def funcao_criar_gerador_image():
 
     # Camadas convolutivas, a partir daqui o padrão será:
 
-        # Conv2D(Filtros, tamanho_filtros, Normalização)
-        # UpSampling2D() <- Aumenta o tamanho da imagem
-        # ZeronPadding2D <- Preenchimento
-        # A ideia principal é aumentar de forma progressiva a saida até o tamanho máximo da imagem
+    # Conv2D(Filtros, tamanho_filtros, Normalização)
+    # UpSampling2D() <- Aumenta o tamanho da imagem
+    # ZeronPadding2D <- Preenchimento
+    # A ideia principal é aumentar de forma progressiva a saida até o tamanho máximo da imagem
 
     model.add(Conv2D(128, kernel_size=(3, 3), padding="same"))
     model.add(UpSampling2D())
@@ -106,9 +104,7 @@ def funcao_criar_gerador_image():
     return Model(entrada_ruidos, saida_modelo)
 
 
-
 def funcao_criar_discriminador_imagem():
-
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=(200, 300, 3), padding="same"))
@@ -131,11 +127,13 @@ def funcao_criar_discriminador_imagem():
 
     return Model(entrada_image, validadecao_model)
 
+# Essa função serve para converter a imagem para um formato compatível com TensorFlow.
+# Na prática ela abre a imagem, decodifica, converte para float e redimensiona a imagem.
 
 
-def parse_image(filename):
+def converte_image_formato_tensorflow(nome_arquivo):
 
-    image = tf.io.read_file(filename)
+    image = tf.io.read_file(nome_arquivo)
     image = tf.image.decode_png(image, channels=3)
     image = tf.image.convert_image_dtype(image, tf.float32)
     image = tf.image.resize(image, [200, 300]) / 255.0
@@ -160,7 +158,7 @@ dos = glob("drive/MyDrive/dataset/*")
 image_list = []
 
 for i in tqdm(dos):
-    image_list.append(parse_image(i))
+    image_list.append(converte_image_formato_tensorflow(i))
 
 X_train = numpy.asarray(image_list, dtype="int32")
 
