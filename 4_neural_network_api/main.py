@@ -13,6 +13,7 @@ from sklearn.cluster import KMeans
 
 # Importando Application ResNet152V2, VGG16, InceptionV3, DenseNet201
 # Elas serão baixadas automáticament antes da execução(demora um pouco)
+
 from tensorflow.keras.applications.resnet_v2 import ResNet152V2
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.inception_v3 import InceptionV3

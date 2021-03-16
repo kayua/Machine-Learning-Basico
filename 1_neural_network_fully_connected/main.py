@@ -37,9 +37,14 @@ from keras.layers import Flatten
 #   8: ship
 #   9: truck
 
-# Função simples para pegar os dados do dataset
 from tensorflow.python.keras import Input
 from tensorflow.python.keras.optimizers import adam
+
+# Classe modelo para as rede neurais(Pode ser feito na mão caso achem melhor)
+from keras.models import Sequential
+
+# Função simples para pegar os dados do dataset
+
 
 
 def carregar_dataset():
@@ -130,7 +135,7 @@ model.summary()
 # Momentum é uma forma de acelerar o treinamento.
 # Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
 
-opt = adam(lr=0.01, momentum=0.9)
+opt = adam(lr=0.01)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
 
@@ -148,7 +153,7 @@ opt = adam(lr=0.01, momentum=0.9)
 
 # compile(<optimizer>, <loss>, <metrics>)
 
-model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
 # treinar o modelo: Para treinar
 # fit(<Entradas X>,<Saida Y>,<Numero Épocas>, <Outros argumentos. Ex. Verbose, batch_size, etc...> )
