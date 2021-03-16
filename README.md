@@ -16,11 +16,12 @@ Esse repositório possui algumas implementações de algoritmos de aprendizado d
 
     Aplicação
     
-        1       |  Rede neural perceptron para classificação de imagens Cifar100.
-        2       |  Rede neural convolutiva para classificação de imagem Cifar100.
-        3       |  Redes neurais predição de series usando rede recorrentes
-        4       |  Redes neurais pré-treinadas e cluster, classificação de imagens.
-        5       |  Clusters do básico ao avançado.
+        1    |  Rede neural perceptron para classificação de imagens Cifar100.
+        2    |  Rede neural convolutiva para classificação de imagem Cifar100.
+        3    |  Redes neurais predição de series usando rede recorrentes
+        4    |  Redes neurais pré-treinadas e cluster, classificação de imagens.
+        5    |  Clusters do básico ao avançado.
+        6    |  Rede Adversarial para geração de imagens. Dataset baby-face
 
 ## Requirements:
 
