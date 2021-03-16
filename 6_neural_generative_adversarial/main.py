@@ -47,6 +47,7 @@ from keras.models import Model
 from keras.optimizers import Adam
 
 # Criar barrinha de carregamento de imagens
+from tensorflow.python.keras.optimizers import adam
 from tqdm import tqdm
 
 # Importando tensorflow
@@ -148,12 +149,29 @@ def converte_image_formato_tensorflow(nome_arquivo):
 
 
 # Aqui estou instânciando o discriminador de imagem
-
 modelo_discriminador = funcao_criar_discriminador_imagem()
+
+# Aqui estou instânciando o gerador de imagem
 modelo_gerador = funcao_criar_gerador_image()
 
+# Definição do otimizador. Nesse caso, foi escolhido o Adam (Gradiente estocástico) usado pelo Multilayer Perceptron
+# Optimizer do keras:  [SGD, RMSprop, Adam, Adadelta, Adagrad, Adamax, Nadam, Ftrl]
+# lr = Taxa de aprendizado. É um valor que multiplica o valor de ajuste do peso.
+# Valores altos de lr podem dificultar o treinamento, valores muito baixos tornam a aprendizagem demorada.
+# Momentum é uma forma de acelerar o treinamento.
+# Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
+opt = adam(lr=0.01)
 
-modelo_discriminador.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+# O modelo precisa ser compilado, para isso chamamos compile()
+# Metrics é utilizado para avaliar seu modelo.
+#Accuracy metrics: accuracy, binary_accuracy, categorical_accuracy, top_K_categorical_accuracy, etc..
+#Probabilistic metrics: binary_crossentropy, categorical_crossentropy, sparse_categorical_crossentropy, poisson
+#Regression metrics: mean_squared_error, root_mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
+# compile(<optimizer>, <loss>, <metrics>)
+
+modelo_discriminador.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
+
+
 modelo_discriminador.trainable = False
 z = Input(shape=(200,))
 img = modelo_gerador(z)

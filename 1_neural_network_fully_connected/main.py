@@ -139,8 +139,6 @@ opt = adam(lr=0.01)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
 
-# Loss é o que o modelo deve procurar minimizar durante o treinamento.
-# Loss avalia se as probabilidades previstas são boas (ou ruins). No exemplo estou utilizado Entropia cruzada
 # https://medium.com/ensina-ai/uma-explica%C3%A7%C3%A3o-visual-para-fun%C3%A7%C3%A3o-de-custo-binary-cross-entropy-ou-log-loss-eaee662c396c
 
 # Metrics é utilizado para avaliar seu modelo.
