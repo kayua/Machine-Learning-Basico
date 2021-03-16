@@ -141,4 +141,5 @@ pyplot.plot(conjunto_de_dados)
 pyplot.plot(resultados_formatados_plot_predicoes)
 pyplot.show()
 
+# Visualização perdas
 visualizar_resultados(resultados)

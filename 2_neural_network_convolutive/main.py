@@ -182,3 +182,4 @@ visualizar_resultados(resultados_treinamento)# Função para visualizar o erro d
 
 # Caso queiram salvar o seus modelos de rede neural:
 #https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+#
