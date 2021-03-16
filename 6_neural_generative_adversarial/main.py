@@ -63,7 +63,8 @@ def funcao_criar_gerador_image():
 
     # Camada de densa responsável por receber os ruídos
     # Cada camada é ativada com uma relu
-    model.add(Dense(6 * 9 * 256, input_dim=200))
+    model.add(Dense(200, input_dim=200))
+    model.add(Dense(13824))
 
     # Camade de transformação, recebe 13824 saídas da camada densa
     # e devolve 256 imagens (6 x 9)
@@ -204,11 +205,10 @@ valor_1_para_o_gerador = numpy.ones((30, 1))
 # Criando a saida desejada para imagem falsas
 zeros = numpy.zeros((30, 1))
 
-epoch = 0
+numero_epocas_treinamento = 0
 
+# Fase de treinamento
 while True:
-
-
 
     # Criando ruído "com 200 pontos de latência"
     lista_ruidos_para_geracao_imagem = numpy.random.normal(0, 1, (30, 200))
@@ -229,14 +229,13 @@ while True:
     # Treimento da GAN(Gerador é o que realmente será treinado)
     perda_saida_rede_gan = rede_GAN.train_on_batch(lista_ruidos_para_geracao_imagem, valor_1_para_o_gerador)
 
-    if epoch % 100 == 0:
+    #Garar e salvar imagem a cada 100 ciclos de treinamento
+    if numero_epocas_treinamento % 100 == 0:
 
-        rand_noise = numpy.random.normal(0, 1, (1, 200))
-        pred = modelo_gerador.predict(rand_noise)
-        confidence = modelo_discriminador.predict(pred)
-        gen_img = (0.5 * pred[0] + 0.5) * 255
+        ruido_aleatorio_para_entrada_do_gerador = numpy.random.normal(0, 1, (1, 200))
+        image_resultante_do_gerador = modelo_gerador.predict(ruido_aleatorio_para_entrada_do_gerador)
+        imagem_gerar_e_normalizada = (0.5 * image_resultante_do_gerador[0] + 0.5) * 255
+        print("Perda Discriminador: %f Perda Gerador: %f" % (resultadas_perda_real_e_falsa_batch[0], perda_saida_rede_gan))
+        cv2.imwrite('imagens/image_saida' + str(numero_epocas_treinamento) + '.png', imagem_gerar_e_normalizada)
 
-        print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, resultadas_perda_real_e_falsa_batch[0], 100 * resultadas_perda_real_e_falsa_batch[1], perda_saida_rede_gan / 10))
-        cv2.imwrite('drive/MyDrive/imagens/image_saida' + str(epoch) + '.png', gen_img)
-
-    epoch += 1
+    numero_epocas_treinamento += 1
