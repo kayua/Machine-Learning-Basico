@@ -79,4 +79,5 @@ for indice, diretorio_image in enumerate(lista_nome_arquivos):
 # Kmeans(<número de classes>, <número de repetições>)
 rotulos_preditos = KMeans(n_clusters=5, random_state=100).fit_predict(lista_de_features_extraidas)
 
+# Resultados
 print(rotulos_preditos)
