@@ -104,7 +104,13 @@ def funcao_criar_gerador_image():
     return Model(entrada_ruidos, saida_modelo)
 
 
+# Essa função é responsável por instânciar o discriminador de imagem
+# Na prática ele funciona como um "reconhecedor de padrões na image"
+# Esse modelo que irá "avaliar" o modelo de geração
+# Ele não deve ser treinado, caso contrário ele irá aprender a produzir um único valor de saída
+# mesmo com entradas diferentes
 def funcao_criar_discriminador_imagem():
+
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size=3, strides=2, input_shape=(200, 300, 3), padding="same"))
@@ -133,22 +139,25 @@ def funcao_criar_discriminador_imagem():
 
 def converte_image_formato_tensorflow(nome_arquivo):
 
-    image = tf.io.read_file(nome_arquivo)
-    image = tf.image.decode_png(image, channels=3)
-    image = tf.image.convert_image_dtype(image, tf.float32)
-    image = tf.image.resize(image, [200, 300]) / 255.0
-    return image
+    imagem_carregada = tf.io.read_file(nome_arquivo)
+    imagem_carregada = tf.image.decode_png(imagem_carregada, channels=3)
+    imagem_carregada = tf.image.convert_image_dtype(imagem_carregada, tf.float32)
+    imagem_carregada = tf.image.resize(imagem_carregada, [200, 300]) / 255.0
+    return imagem_carregada
 
 
-optimizer = Adam(0.001, 0.5)
 
-discriminador = funcao_criar_discriminador_imagem()
-gerador = funcao_criar_gerador_image()
-discriminador.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
-discriminador.trainable = False
+# Aqui estou instânciando o discriminador de imagem
+
+modelo_discriminador = funcao_criar_discriminador_imagem()
+modelo_gerador = funcao_criar_gerador_image()
+
+
+modelo_discriminador.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+modelo_discriminador.trainable = False
 z = Input(shape=(200,))
-img = gerador(z)
-valid = discriminador(img)
+img = modelo_gerador(z)
+valid = modelo_discriminador(img)
 
 rede_gan = Model(z, valid)
 rede_gan.compile(loss='binary_crossentropy', optimizer=optimizer)
@@ -175,17 +184,17 @@ while (1):
 
     imgs = X_train[idx]
 
-    gen_imgs = gerador.predict(noise)
-    d_loss_r = discriminador.train_on_batch(imgs, ones)
-    d_loss_f = discriminador.train_on_batch(gen_imgs, zeros)
+    gen_imgs = modelo_gerador.predict(noise)
+    d_loss_r = modelo_discriminador.train_on_batch(imgs, ones)
+    d_loss_f = modelo_discriminador.train_on_batch(gen_imgs, zeros)
     d_loss = numpy.add(d_loss_r, d_loss_f) * 0.5
 
     g_loss = rede_gan.train_on_batch(noise, ones)
 
     if epoch % 100 == 0:
         rand_noise = numpy.random.normal(0, 1, (1, 200))
-        pred = gerador.predict(rand_noise)
-        confidence = discriminador.predict(pred)
+        pred = modelo_gerador.predict(rand_noise)
+        confidence = modelo_discriminador.predict(pred)
         gen_img = (0.5 * pred[0] + 0.5) * 255
 
         print("%d D loss: %f, acc.: %.2f%% G loss: %f" % (epoch, d_loss[0], 100 * d_loss[1], g_loss / 10))
