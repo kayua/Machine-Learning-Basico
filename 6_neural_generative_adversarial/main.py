@@ -16,7 +16,10 @@ import numpy
 from keras.layers import Conv2D
 
 # Activations do keras: [relu - softmax - LeakyReLU - prelu - elu - thresholdedrelu]
-from keras.layers import Activation, MaxPooling2D
+from keras.layers import Activation
+
+# Camada de pooling2d
+from keras.layers import MaxPooling2D
 
 # Dense é a rede "tradicional", neurônios simples
 from keras.layers import Dense

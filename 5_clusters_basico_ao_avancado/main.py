@@ -1,4 +1,3 @@
-
 # Biblioteca para leitura de CSV
 from pandas import read_csv
 
