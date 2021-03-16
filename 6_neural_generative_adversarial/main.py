@@ -110,6 +110,7 @@ def funcao_criar_gerador_image():
 # Esse modelo que irá "avaliar" o modelo de geração
 # Ele não deve ser treinado, caso contrário ele irá aprender a produzir um único valor de saída
 # mesmo com entradas diferentes
+
 def funcao_criar_discriminador_imagem():
 
     model = Sequential()
@@ -171,8 +172,9 @@ opt = adam(lr=0.01)
 
 modelo_discriminador.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
 
-
+# Aqui estou especificando que o discriminador não deve ser treinado
 modelo_discriminador.trainable = False
+
 z = Input(shape=(200,))
 img = modelo_gerador(z)
 valid = modelo_discriminador(img)
