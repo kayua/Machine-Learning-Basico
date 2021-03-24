@@ -135,6 +135,8 @@ model.summary()
 # Momentum é uma forma de acelerar o treinamento.
 # Momentum https://machinelearningmastery.com/gradient-descent-with-momentum-from-scratch/
 
+
+
 opt = adam(lr=0.01)
 
 # O modelo precisa ser compilado, para isso chamamos compile()
