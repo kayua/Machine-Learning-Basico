@@ -139,6 +139,9 @@ model.summary()
 
 opt = adam(lr=0.01)
 
+# Adam é um otimizador baseado em gradiente estocástico com  momentum.
+# https://www.youtube.com/c/Deeplearningai/playlists <- Esse canal tem cursos bem interessantes.
+
 # O modelo precisa ser compilado, para isso chamamos compile()
 
 # https://medium.com/ensina-ai/uma-explica%C3%A7%C3%A3o-visual-para-fun%C3%A7%C3%A3o-de-custo-binary-cross-entropy-ou-log-loss-eaee662c396c
