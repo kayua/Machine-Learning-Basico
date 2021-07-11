@@ -1,7 +1,7 @@
 # Biblioteca para leitura de CSV
 from pandas import read_csv
 
-# Importando dependências do keras
+# Importando dependências do sklearn
 from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift
 from sklearn.cluster import DBSCAN
