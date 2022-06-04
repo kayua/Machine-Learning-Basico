@@ -1,37 +1,35 @@
-# Introdução ao Machine Learning
+[![ml-intro](banner.png)]()
 
 Exemplo aplicação de aprendizado de máquinas a diversos problemas.
 
 ## Redes neurais
+
 Esse repositório possui algumas implementações de algoritmos de aprendizado de máquinas utilizando APIs conhecidas.
 
-`1 - Redes neurais - Gerais`
-
-`2 - Redes neurais - Pré-treinadas`
-
-`3 - Clusters - Básico-Avançado`
+1. **Redes neurais** :: _Gerais_
+2. **Redes neurais** :: _Pré-treinadas_
+3. **Clusters** :: _Básico_ - _Avançado_
 
 
-## Implementações:
+## Implementações
 
-    Aplicação
+### Aplicação
     
-        1    |  Rede neural perceptron para classificação de imagens Cifar100.
-        2    |  Rede neural convolutiva para classificação de imagem Cifar100.
-        3    |  Redes neurais predição de series usando rede recorrentes
-        4    |  Redes neurais pré-treinadas e cluster, classificação de imagens.
-        5    |  Clusters do básico ao avançado.
-        6    |  Rede Adversarial para geração de imagens. Dataset baby-face
+1. Rede neural **perceptron** para classificação de imagens _Cifar100_
+2. Rede neural **convolutiva** para classificação de imagem _Cifar100_
+3. Redes neurais predição de series usando rede recorrentes
+4. Redes neurais pré-treinadas e cluster, classificação de imagens
+5. Clusters do básico ao avançado
+6. Rede **Adversarial** para geração de imagens - _dataset_ baby-face
 
-## Requirements:
+## Requirements
 
-`numpy 1.18.5`
-`Keras 2.4.3`
-`tqdm 4.48.2`
-`tensorflow 2.3.0`
+- Python >= 3.8
+- Pipenv
 
-`h5py 2.10.0`
-`scikit-learn 0.23.2`
-`matplotlib 3.2.2`
-`pandas`
-`scipy 1.4.1`
+## Using
+
+```sh
+pipenv install
+pipenv shell
+```
