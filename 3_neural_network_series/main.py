@@ -1,5 +1,5 @@
 # Importando bibliotecas necessárias
-
+# dataset from: https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/datasets/data/breast_cancer.csv
 
 # Biblioteca numérica
 import numpy
@@ -62,7 +62,7 @@ def visualizar_resultados(modelo):
     pyplot.close()
 
 # Carregamento dos dados da tabela
-dados_tabela = read_csv('tabela/tabela.csv', usecols=[1], engine='python')
+dados_tabela = read_csv('dataset.csv', usecols=[1], engine='python')
 conjunto_de_dados = dados_tabela.values
 
 # Conversão para float32
