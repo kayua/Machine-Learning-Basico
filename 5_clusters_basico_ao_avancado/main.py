@@ -10,8 +10,8 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.mixture import GaussianMixture
 
 # Carregamento dos dados da tabela
-dados_tabela = read_csv('tabela/dataset_iris.csv', usecols=[1, 2, 3, 4], engine='python')
-rotulos = read_csv('tabela/dataset_iris.csv', usecols=[0], engine='python')
+dados_tabela = read_csv('iris.csv', usecols=[1, 2, 3, 4], engine='python')
+rotulos = read_csv('iris.csv', usecols=[0], engine='python')
 conjunto_de_dados = dados_tabela.values
 rotulos = rotulos.values
 
