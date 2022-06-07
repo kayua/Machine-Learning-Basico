@@ -1,5 +1,5 @@
 # Importando bibliotecas necessárias
-# Descomprima o dataset para uma pasta chamada images
+# Image dataset from: https://github.com/miladfa7/Image-Classification-Transfer-Learning
 
 # Biblioteca para listagem de arquivos
 import glob
@@ -45,19 +45,19 @@ model.summary()
 lista_de_features_extraidas = []
 
 # Aqui estou listando e ordenando as imagens do diretório tabela/
-lista_nome_arquivos = glob.glob("images/*.jpg")
+lista_nome_arquivos = glob.glob("img/*.jpg")
 lista_nome_arquivos = sorted(lista_nome_arquivos)
 
 # Esse laço serve para extrair features de todas imagens
 for indice, diretorio_image in enumerate(lista_nome_arquivos):
 
-    if indice % 5 == 0:
+    if indice % 20 == 0:
         print('Class: ')
 
     print(' - ', diretorio_image)
 
     # Abrindo a imagem usando uma ferramenta do tensorflow. Dá para usar outras ferramentas sem problema
-    imagem_aberta = image.load_img(diretorio_image, target_size=(224, 224))
+    imagem_aberta = image.load_img(diretorio_image, target_size=(256, 256))
 
     # Transformando a imagem em um array
     imagem_array = image.img_to_array(imagem_aberta)
@@ -77,7 +77,7 @@ for indice, diretorio_image in enumerate(lista_nome_arquivos):
 
 # Instânciando o Kmeans e fazendo o aprendizado não supervisionado, ele já faz a predição dos resultados
 # Kmeans(<número de classes>, <número de repetições>)
-rotulos_preditos = KMeans(n_clusters=5, random_state=100).fit_predict(lista_de_features_extraidas)
+rotulos_preditos = KMeans(n_clusters=20, random_state=100).fit_predict(lista_de_features_extraidas)
 
 # Resultados
 print(rotulos_preditos)
