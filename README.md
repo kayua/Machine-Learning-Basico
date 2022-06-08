@@ -24,12 +24,20 @@ Esse repositório possui algumas implementações de algoritmos de aprendizado d
 
 ## Requirements
 
-- Python >= 3.8
+- Python (3.8.x)
 - Pipenv
 
 ## Using
 
+Run pipenv as usual:
+
 ```sh
 pipenv install
 pipenv shell
+```
+
+If you encounter any issues, try updating `pipenv` and make sure you have `python3.8` installed and reacheable within your machine.
+
+```sh
+python3 -m pip install --upgrade pipenv
 ```
